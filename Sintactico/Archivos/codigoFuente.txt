@@ -1,0 +1,9 @@
+inicio
+int a = 1;
+int b = 2;
+int c = 0;
+if (a == b) then c = a + b;
+print c;
+if (a != b) then c = a * b;
+print c;
+fin
