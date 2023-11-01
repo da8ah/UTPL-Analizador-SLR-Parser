@@ -1,12 +1,12 @@
 # Analizador SLR Parser
 
-[Informe](./doc/Informe.pdf)
+En este proyecto se realiza la implementación de un analizador léxico y sintáctico que son la base de todo compilador con la finalidad de entender su funcionamiento. El analizador léxico conforma Tokens, es decir conjuntos de strings que pueden representar una sentencia, para posteriormente enviarlos al analizador sintáctico. El analizador sintáctico por su parte recibe uno a uno los Tokens enviados por el analizador léxico para procesarlos, darle sentido gramatical y verificar la correcta estructura del lenguaje de programación definido. Finalmente todo lo que se desarrolló en el proyecto se resume en el siguiente [Informe](./doc/Informe.pdf) adjunto.
 
 ## Definición del Lenguaje
 
-### Palabras reservadas
+### Palabras Reservadas
 
-Una palabra reservada tiene un significado específico dentro del programa
+Una palabra reservada tiene un significado específico dentro del lenguaje de programación
 
 | Palabra reservada | Descripción                                          |
 | ----------------- | ---------------------------------------------------- |
