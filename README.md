@@ -1,6 +1,85 @@
 # Analizador SLR Parser
 
-En este proyecto se realiza la implementación de un analizador léxico y sintáctico que son la base de todo compilador con la finalidad de entender su funcionamiento. El analizador léxico conforma Tokens, es decir conjuntos de strings que pueden representar una sentencia, para posteriormente enviarlos al analizador sintáctico. El analizador sintáctico por su parte recibe uno a uno los Tokens enviados por el analizador léxico para procesarlos, darle sentido gramatical y verificar la correcta estructura del lenguaje de programación definido. Finalmente todo lo que se desarrolló en el proyecto se resume en el siguiente [Informe](./doc/Informe.pdf) adjunto.
+<br/>
+
+📌 REFERENCIA: [[2da.Ed] Compiladores, Principios, Técnicas y Herramientas - (Aho, Sethi, Ullman)](https://books.google.com.ec/books/about/Compiladores.html?id=yG6qJBAnE9UC&redir_esc=y)
+
+<br/>
+
+## Teoría: Autómatas y Compiladores
+
+En este proyecto se realiza la implementación de un analizador léxico y sintáctico que son la base de todo compilador con la finalidad de entender su funcionamiento. El analizador léxico conforma Tokens, es decir conjuntos de strings que pueden representar una sentencia, para posteriormente enviarlos al analizador sintáctico. El analizador sintáctico por su parte recibe uno a uno los Tokens enviados por el analizador léxico para procesarlos, darle sentido gramatical y verificar la correcta estructura del lenguaje de programación definido.
+
+Todo lo que se desarrolló durante el proyecto se presenta en el siguiente [Informe](./doc/Informe.pdf).
+
+### Análisis Sintáctico
+
+Por lo general, en el análisis sintáctico se utilizan estructuras de datos de árboles para recorrer el lenguaje de programación, puede hacérselo de izquierda a derecha (LR) y se lo puede hacer ascendente (desde las hojas hacia la raíz) o descendentemente (desde la raíz hacia las hojas).
+
+### Errores
+
+Un compilador aparte de estructurar el lenguaje de programación también es el encargado de manejar los posibles errores al momento de analizar el código fuente, debido a que los programas que se sirven como entrada al compilador son propensos a tener errores: 
+
+- léxicos: un error ortográfico en palabras reservadas e identificadores, o la omisión de comillas en cadenas de texto, 
+- sintácticos: punto y comas omitidos al final de sentencias o el desbalance (desequilibrio) de paréntesis, 
+- semánticos: inconsistencias en lo expresado y lo esperado como devolver en Java un `return` en una función `void`, y 
+- lógicos: fallo del programador al usar el lenguaje de programación como emplear `=` en una comparación en vez de `==`.
+
+A diferencia de un lenguaje hablado, un lenguaje de programación (de computador) requiere de precisión sintáctica. Por ende, una de las mayores dificultades para un compilador es la detección de errores semánticos y lógicos, por lo general.
+
+### Gramática libre de contexto
+
+Una gramática se utiliza para especificar la sintaxis de un lenguaje, es decir, describe en forma natural la estructura jerárquica de la mayoría de las instrucciones de un lenguaje de programación.
+
+Tomando como ejemplo una instrucción del tipo `if ( expr ) instr else instr` se interpreta como: palabra clave `if`, un paréntesis abierto, una expresión, un paréntesis cerrado, una instrucción, la palabra clave `else` y otra instrucción.
+La estructuración del tipo `inst` "puede tener la forma de" `if ( expr ) instr else instr`, puede expresarse como: `instr -> if ( expr ) instr else instr`, las reglas de este tipo se denominan producciones.
+
+Entonces, dada la siguiente producción: `instr -> if ( expr ) instr else instr`, una gramática libre de contexto (o simplemente gramática) está compuesta de: 
+
+- terminales: Token es sinónimo de terminal, pues son los símbolos básicos de los cuales se forman las cadenas o "tokens". Asumimos que son los primeros componentes que produce el analizador léxico, por ejemplo `if`, `else` y los paréntesis `(` y `)`.
+- no terminales: son variabes sintácticas que denotan conjuntos de cadenas y/o terminales, por ejemplo `instr` y `expr`. Los no terminales imponen una estructura jerárquica sobre el lenguaje, que representa la clave para el análisis sintáctico y la traducción.
+- producciones: tienen tres partes, un no terminal al lado izquierdo que se conoce como encabezado, una flecha divisoria, y al lado derecho una secuencia de terminales y no terminales que se conoce como cuerpo.
+- símbolo inicial: por lo general un no terminal señala el símbolo inicial.
+
+#### Derivaciones
+
+En las derivaciones pueden utilizarse las producciones con un mismo encabezado para reemplazarlos en donde existan no terminales.
+
+En el ejemplo a continuación:
+
+- `llamada     -> id (paramsopc)`
+- `paramsopc   -> params | <>` (la barra vertical `|` significa "o", `<>` representa vacío, es decir `paramsopc` puede ser `params` o `vacío`)
+- `params      -> params, param | param`
+
+Se está representando una función de un lenguaje de programación, como se obseva `paramsopc` (parámetros opcionales), que en la primera producción se encuentra dentro de los paréntesis, puede reemplazarse utilizando el cuerpo de la segunda producción debido a que tiene el mismo encabezado. Lo mismo ocurre en la segunda producción con `params` que es el encabezado de la tercera producción. En la tercera producción `params` puede ser expresada mediante un conjunto de `params` más un `param`, o puede ser un `param` individual. De esta manera, la sintaxis permite definir funciones que tengan cero o más parámetros.
+Es así que el problema para el Análisis Sintático es el de tomar una cadena de terminales y averiguar cómo derivarla a partir del símbolo inicial de la gramática. Este problema se enfrenta mediante teoría de árboles y grafos.
+
+#### Árboles de análisis sintáctico
+
+En una gramática libre de contexto un árbol de análisis sintáctico tiene las siguientes propiedades:
+
+- La `raíz` se etiqueta con el `símbolo inicial`
+- Cada `hoja` se etiqueta con un `terminal` o `<>`
+- Cada nodo `interior` se etiqueta con un `no terminal`
+- Si un nodo interior `no terminal` tiene hijos con etiquetas en secuencia de izquierda a derecha (p. ej.: 1, 2, 3 o a, b ,c), entonces debe haber una producción `no terminal -> hijo1 | hijo2 | hijo3 ... hijoN`.
+
+Teniendo en cuenta las siguientes producciones:
+
+1. `lista   -> lista + dígito`
+2. `lista   -> lista - dígito`
+3. `lista   -> dígito`
+4. `dígito  -> 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9`
+
+Se puede deducir que para `9 - 5 + 2` se puede utilizar la primera producción y dado que se puede derivar la segunda se obtiene `lista -> lista - dígito + dígito`. Se utilizó el cuerpo de la segunda producción en la primera producción y luego se debe derivar hasta la cuarta producción. El árbol sintáctico se representaría de la siguiente manera:
+
+<div align="center">
+<img style="width:20%" src="./doc/ArbolSintactico1.png" >
+</div>
+</br>
+
+## Pasos para la Construcción
+
+1. 
 
 ## Definición del Lenguaje
 
