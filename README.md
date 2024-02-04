@@ -73,9 +73,21 @@ Teniendo en cuenta las siguientes producciones:
 Se puede deducir que para `9 - 5 + 2` se puede utilizar la primera producción y dado que se puede derivar la segunda se obtiene `lista -> lista - dígito + dígito`. Se utilizó el cuerpo de la segunda producción en la primera producción y luego se debe derivar hasta la cuarta producción. El árbol sintáctico se representaría de la siguiente manera:
 
 <div align="center">
-<img style="width:20%" src="./doc/ArbolSintactico1.png" >
+<img style="width:30%" src="./doc/AS1.png" >
 </div>
 </br>
+
+#### Ambigüedades
+
+Una gramática es ambigua cuando más de un árbol de análisis sintáctico puede generar una misma cadena de terminales. En los compiladores se deben diseñar gramáticas sin ambigüedades o emplear reglas adicionales que resuelvan las ambigüedades.
+
+Partiendo del caso anterior, si no se realiza una abstracción adecuada de la gramática que se requiere representar se podría definir algo como `cadena -> cadena + cadena | cadena - cadena | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9` en donde se emplea `cadena` como una generalización de `lista` y `dígito`. Al mezclar ambos conceptos la definición tiene un sentido superficial y es propensa a crear ambigüedades debido a que un `dígito` es un tipo especial de `lista`.
+
+<div align="center" style="width:100%;display:flex;flex-direction:row;justify-content:space-evenly;align-items:flex-start;">
+<img style="width:30%" src="./doc/AS2.png" >
+<img style="width:30%" src="./doc/AS3.png" >
+</div>
+<br/>
 
 ## Pasos para la Construcción
 
