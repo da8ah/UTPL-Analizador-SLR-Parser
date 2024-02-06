@@ -47,9 +47,9 @@ En las derivaciones pueden utilizarse las producciones con un mismo encabezado p
 
 En el ejemplo a continuación:
 
-- `llamada     -> id (paramsopc)`
-- `paramsopc   -> params | <>` (la barra vertical `|` significa "o", `<>` representa vacío, es decir `paramsopc` puede ser `params` o `vacío`)
-- `params      -> params, param | param`
+- `llamada   -> id (paramsopc)`
+- `paramsopc -> params | <>` (la barra vertical `|` significa "o", `<>` representa vacío, es decir `paramsopc` puede ser `params` o `vacío`)
+- `params    -> params, param | param`
 
 Se está representando una función de un lenguaje de programación, como se obseva `paramsopc` (parámetros opcionales), que en la primera producción se encuentra dentro de los paréntesis, puede reemplazarse utilizando el cuerpo de la segunda producción debido a que tiene el mismo encabezado. Lo mismo ocurre en la segunda producción con `params` que es el encabezado de la tercera producción. En la tercera producción `params` puede ser expresada mediante un conjunto de `params` más un `param`, o puede ser un `param` individual. De esta manera, la sintaxis permite definir funciones que tengan cero o más parámetros.
 Es así que el problema para el Análisis Sintático es el de tomar una cadena de terminales y averiguar cómo derivarla a partir del símbolo inicial de la gramática. Este problema se enfrenta mediante teoría de árboles y grafos.
@@ -59,16 +59,16 @@ Es así que el problema para el Análisis Sintático es el de tomar una cadena d
 En una gramática libre de contexto un árbol de análisis sintáctico tiene las siguientes propiedades:
 
 - La `raíz` se etiqueta con el `símbolo inicial`
-- Cada `hoja` se etiqueta con un `terminal` o `<>`
+- Cada `hoja` se etiqueta con un `terminal` o `<>` (vacío)
 - Cada nodo `interior` se etiqueta con un `no terminal`
-- Si un nodo interior `no terminal` tiene hijos con etiquetas en secuencia de izquierda a derecha (p. ej.: 1, 2, 3 o a, b ,c), entonces debe haber una producción `no terminal -> hijo1 | hijo2 | hijo3 ... hijoN`.
+- Si un nodo interior `no terminal` tiene hijos con etiquetas en secuencia de izquierda a derecha (p. ej.: 1, 2, 3 o a, b ,c), entonces debe haber una producción `no terminal -> hijo1 | hijo2 | hijo3 ... hijo N`.
 
 Teniendo en cuenta las siguientes producciones:
 
-1. `lista   -> lista + dígito`
-2. `lista   -> lista - dígito`
-3. `lista   -> dígito`
-4. `dígito  -> 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9`
+1. `lista  -> lista + dígito`
+2. `lista  -> lista - dígito`
+3. `lista  -> dígito`
+4. `dígito -> 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9`
 
 Se puede deducir que para `9 - 5 + 2` se puede utilizar la primera producción y dado que se puede derivar la segunda se obtiene `lista -> lista - dígito + dígito`. Se utilizó el cuerpo de la segunda producción en la primera producción y luego se debe derivar hasta la cuarta producción. El árbol sintáctico se representaría de la siguiente manera:
 
@@ -88,6 +88,15 @@ Partiendo del caso anterior, si no se realiza una abstracción adecuada de la gr
 <img style="width:30%" src="./doc/AS3.png" >
 </div>
 <br/>
+
+#### Asociatividad y Precedencia de operadores
+
+En la matemática la asociatividad se refiere a por cuál lado se empieza a resolver una operación aritmética, izquierda o derecha. La suma y resta se resuelven por la izquierda mientras que la multiplicación y división por la derecha.
+Sin embargo, en la mayoría de los lenguajes de programación las cuatro operaciones aritméticas (suma, resta, multiplicación y división) son asociativos por la izquierda. Esto debido a que en los compiladores la asociatividad emplea una estrategia distinta mediante los árboles sintácticos. Algunes operadores asociativos por la derecha comunes pueden ser potenciación y asignación.
+La precedencia a continuación en los operadores se presentan de menor a mayor y con una dirección de resolución:
+
+- Asociativo por la izquierda `+ -`
+- Asociativo por la derecha   `* /`
 
 ## Pasos para la Construcción
 
