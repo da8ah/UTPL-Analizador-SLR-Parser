@@ -91,12 +91,20 @@ Partiendo del caso anterior, si no se realiza una abstracción adecuada de la gr
 
 #### Asociatividad y Precedencia de operadores
 
-En la matemática la asociatividad se refiere a por cuál lado se empieza a resolver una operación aritmética, izquierda o derecha. La suma y resta se resuelven por la izquierda mientras que la multiplicación y división por la derecha.
+En la matemática se empieza a resolver una operación aritmética, por izquierda o derecha. La suma y resta se resuelven por la izquierda mientras que la multiplicación y división por la derecha. Además la multiplicación y división tienen mayor precedencia, es decir se resuelven antes que la suma y la resta.
 Sin embargo, en la mayoría de los lenguajes de programación las cuatro operaciones aritméticas (suma, resta, multiplicación y división) son asociativos por la izquierda. Esto debido a que en los compiladores la asociatividad emplea una estrategia distinta mediante los árboles sintácticos. Algunes operadores asociativos por la derecha comunes pueden ser potenciación y asignación.
-La precedencia a continuación en los operadores se presentan de menor a mayor y con una dirección de resolución:
+La precedencia a continuación en los operadores se presentan de menor a mayor y con una asociatividad de izquierda o derecha:
 
 - Asociativo por la izquierda `+ -`
 - Asociativo por la derecha   `* /`
+
+Analicemos la siguiente gramática empleada para expresiones aritméticas:
+
+- `expr   -> expr + term | expr - term | term`
+- `term   -> term * factor | term / factor | factor`
+- `factor -> dígito | (expr)`
+
+En la primera producción, se definen las operaciones de suma y resta, en la segunda producción se definen multiplicación y división, finalmente en la tercera producción se define el elemento fundamental para operar que son los dígitos y, cabe denotar, que también se puede emplear una expresión creando una estructura recursiva.
 
 ## Pasos para la Construcción
 
