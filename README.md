@@ -48,7 +48,7 @@ En las derivaciones pueden utilizarse las producciones con un mismo encabezado p
 En el ejemplo a continuación:
 
 - `llamada   -> id (paramsopc)`
-- `paramsopc -> params | <>` (la barra vertical `|` significa "o", `<>` representa vacío, es decir `paramsopc` puede ser `params` o `vacío`)
+- `paramsopc -> params | <>` (`|` significa "o", `<>` representa vacío, es decir `paramsopc` puede ser `params` o `vacío`)
 - `params    -> params, param | param`
 
 Se está representando una función de un lenguaje de programación, como se obseva `paramsopc` (parámetros opcionales), que en la primera producción se encuentra dentro de los paréntesis, puede reemplazarse utilizando el cuerpo de la segunda producción debido a que tiene el mismo encabezado. Lo mismo ocurre en la segunda producción con `params` que es el encabezado de la tercera producción. En la tercera producción `params` puede ser expresada mediante un conjunto de `params` más un `param`, o puede ser un `param` individual. De esta manera, la sintaxis permite definir funciones que tengan cero o más parámetros.
@@ -91,20 +91,21 @@ Partiendo del caso anterior, si no se realiza una abstracción adecuada de la gr
 
 #### Asociatividad y Precedencia de operadores
 
-En la matemática se empieza a resolver una operación aritmética, por izquierda o derecha. La suma y resta se resuelven por la izquierda mientras que la multiplicación y división por la derecha. Además la multiplicación y división tienen mayor precedencia, es decir se resuelven antes que la suma y la resta.
-Sin embargo, en la mayoría de los lenguajes de programación las cuatro operaciones aritméticas (suma, resta, multiplicación y división) son asociativos por la izquierda. Esto debido a que en los compiladores la asociatividad emplea una estrategia distinta mediante los árboles sintácticos. Algunes operadores asociativos por la derecha comunes pueden ser potenciación y asignación.
-La precedencia a continuación en los operadores se presentan de menor a mayor y con una asociatividad de izquierda o derecha:
+En la matemática se empieza a resolver una operación aritmética por la izquierda o derecha. La suma y resta se resuelven por la izquierda mientras que la multiplicación y división por la derecha. Además la multiplicación y división tienen mayor precedencia, es decir se resuelven antes que la suma y la resta.
+Sin embargo, en la mayoría de los lenguajes de programación las cuatro operaciones aritméticas (suma, resta, multiplicación y división) son asociativas por la izquierda. Esto debido a que en los compiladores la asociatividad de los árboles sintácticos emplea una estrategia distinta. Algunos operadores asociativos por la derecha comunes pueden ser potenciación y asignación.
 
-- Asociativo por la izquierda `+ -`
-- Asociativo por la derecha   `* /`
+Considerando en el siguiente ejemplo,
 
-Analicemos la siguiente gramática empleada para expresiones aritméticas:
+- Asociativo por la derecha (mayor precedencia)  `* /`
+- Asociativo por la izquierda (menor precedencia) `+ -`
+
+analicemos la siguiente gramática empleada para expresiones aritméticas:
 
 - `expr   -> expr + term | expr - term | term`
 - `term   -> term * factor | term / factor | factor`
 - `factor -> dígito | (expr)`
 
-En la primera producción, se definen las operaciones de suma y resta, en la segunda producción se definen multiplicación y división, finalmente en la tercera producción se define el elemento fundamental para operar que son los dígitos y, cabe denotar, que también se puede emplear una expresión creando una estructura recursiva.
+En la primera producción se definen las operaciones de suma y resta, en la segunda producción se definen multiplicación y división, finalmente en la tercera producción se define el elemento fundamental para operar que son los dígitos y, cabe denotar que, también se puede emplear una expresión entre paréntesis creando así una estructura recursiva que permite un anidamiento con profundidad arbitraria.
 
 ## Pasos para la Construcción
 
