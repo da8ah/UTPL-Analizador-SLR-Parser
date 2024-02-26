@@ -91,21 +91,54 @@ Partiendo del caso anterior, si no se realiza una abstracción adecuada de la gr
 
 #### Asociatividad y Precedencia de operadores
 
+**Ejemplo 1**
+
 En la matemática se empieza a resolver una operación aritmética por la izquierda o derecha. La suma y resta se resuelven por la izquierda mientras que la multiplicación y división por la derecha. Además la multiplicación y división tienen mayor precedencia, es decir se resuelven antes que la suma y la resta.
+
 Sin embargo, en la mayoría de los lenguajes de programación las cuatro operaciones aritméticas (suma, resta, multiplicación y división) son asociativas por la izquierda. Esto debido a que en los compiladores la asociatividad de los árboles sintácticos emplea una estrategia distinta. Algunos operadores asociativos por la derecha comunes pueden ser potenciación y asignación.
 
-Considerando en el siguiente ejemplo,
+En matemática las precedencias son de la siguiente manera:
 
 - Asociativo por la derecha (mayor precedencia)  `* /`
 - Asociativo por la izquierda (menor precedencia) `+ -`
 
-analicemos la siguiente gramática empleada para expresiones aritméticas:
+Analicemos la siguiente gramática empleada para expresiones aritméticas:
 
 - `expr   -> expr + term | expr - term | term`
 - `term   -> term * factor | term / factor | factor`
 - `factor -> dígito | (expr)`
 
+En la gramática la precedencia se expresa de abajo hacia arriba por lo que `factor` tiene la mayor precedencia, le sigue `term` y finalmente `expr`. Además, en cada producción los operadores que están en la misma línea tienen igual asociatividad y precedencia.
+
+Creamos dos no terminales `expr` (expresión) y `term` (término) para los dos niveles de precedencia, y un no terminal adicional `factor` para generar unidades básicas en las expresiones. Las unidades básicas son dígitos y expresiones entre paréntesis. 
+
 En la primera producción se definen las operaciones de suma y resta, en la segunda producción se definen multiplicación y división, finalmente en la tercera producción se define el elemento fundamental para operar que son los dígitos y, cabe denotar que, también se puede emplear una expresión entre paréntesis creando así una estructura recursiva que permite un anidamiento con profundidad arbitraria.
+
+<br/>
+
+**Ejemplo 2**
+
+A continuación se presenta una gramática para un subconjunto de instrucciones de Java (sería un lenguaje diferente que guarda ciertas similitudes con Java):
+
+`instr` -> **id** = *expresión* ;
+        | **if** ( *expresión* ) *instr*
+        | **if** = *expresión* ; *instr* **else** *instr*
+        | **while** ( *expresión* ) *instr*
+        | **do** *instr* **while** ( *expresión* ) ;
+        | { *instrs* }
+
+`instrs` -> *instrs* *instr* | `<>`
+
+En este ejemplo las producciones de `expresión` se han omitido para facilidad. Si se analiza con detenimiento el ejemplo, la mayoría de instrucciones empiezan con una `palabra clave` o un `carácter especial`, con excepciones como las asignaciones o llamadas a procedimientos. En Java este tipo de gramática ambigua es legal.
+
+En `instr` la primera producción es el terminal `id` que representa a cualquier identificador. En Java las instrucciones de asignación pueden anidarse en una expresión, por lo que asignaciones del tipo `a = b = c` son válidas mientras que para esta gramática no lo son.
+
+El no terminal `instrs` genera una lista de instrucciones (posiblemente vacía) más una instrucción, o directamente una lista vacía. Adicionalmente, los signos de punto y coma son colocados sutilmente al final de los cuerpos que NO terminan en `instr`, esto para evitar agregar innecesariamente punto y come en instrucciones como `if` y `while` que terminan con subinstrucciones anidadas.
+
+### Traducción orientada a la Sintaxis (expresiones infijas a notación postfijo)
+
+
+
 
 ## Pasos para la Construcción
 
