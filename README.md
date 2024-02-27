@@ -137,8 +137,19 @@ El no terminal `instrs` genera una lista de instrucciones (posiblemente vacía) 
 
 ### Traducción orientada a la Sintaxis (expresiones infijas a notación postfijo)
 
+- `Atributos`: son cualquier cantidad asociada con una construcción de programación, p.ej. tipos de datos de las expresiones, el número de instrucciones en el código generado, la ubicación de la primera instrucción, entre muchas otras posibilidades.
 
+- `Esquemas de traducción` (orientada a la sintaxis): es una notación que permite unir los fragmentos de un programa a las producciones de una gramática. La traducción del programa se produce cuando en el análisis sintáctico se ejecutan todos los fragmentos.
 
+#### Notación postfija
+
+La notación postfija para una expresión *E* puede definirse de manera inductiva, como se muestra a continuación:
+
+1. Si *E* es una variable o constante, entonces la notación postfija para *E* es la misma *E*.
+
+1. Si *E* es una expresión de la forma *E~1~* **op** *E~2~*, entonces la notación postfija para *E* es *E'~1~* *E'~2~* **op**, en donde *E'~1~* y *E'~2~* son las notaciones postfijas de *E~1~* *E~2~*.
+
+1. Si *E* es una expresión con paréntesis de la forma (*E~1~*), entonces la notación postfija para *E* es la misma que para *E~1~*.
 
 ## Pasos para la Construcción
 
