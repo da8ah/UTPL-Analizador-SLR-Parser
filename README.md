@@ -120,12 +120,18 @@ En la primera producción se definen las operaciones de suma y resta, en la segu
 
 A continuación se presenta una gramática para un subconjunto de instrucciones de Java (sería un lenguaje diferente que guarda ciertas similitudes con Java):
 
-`instr` -> **id** = *expresión* ;
-        | **if** ( *expresión* ) *instr*
-        | **if** = *expresión* ; *instr* **else** *instr*
-        | **while** ( *expresión* ) *instr*
-        | **do** *instr* **while** ( *expresión* ) ;
-        | { *instrs* }
+`instr` -> **id** = *expresión* ; 
+        <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;**if** ( *expresión* ) *instr* 
+        <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;**if** = *expresión* ; *instr* **else** *instr* 
+        <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;**while** ( *expresión* ) *instr* 
+        <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;**do** *instr* **while** ( *expresión* ) ; 
+        <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;{ *instrs* } 
+        <br/>
 
 `instrs` -> *instrs* *instr* | `<>`
 
@@ -137,7 +143,7 @@ El no terminal `instrs` genera una lista de instrucciones (posiblemente vacía) 
 
 ### Traducción orientada a la Sintaxis (expresiones infijas a notación postfijo)
 
-- `Atributos`: son cualquier cantidad asociada con una construcción de programación, p.ej. tipos de datos de las expresiones, el número de instrucciones en el código generado, la ubicación de la primera instrucción, entre muchas otras posibilidades.
+- `Atributos`: son cualquier cantidad asociada con una construcción de programación, p.ej. el número de tipos de datos de las expresiones, el número de instrucciones en el código generado, la ubicación de la primera instrucción, entre muchas otras posibilidades.
 
 - `Esquemas de traducción` (orientada a la sintaxis): es una notación que permite unir los fragmentos de un programa a las producciones de una gramática. La traducción del programa se produce cuando en el análisis sintáctico se ejecutan todos los fragmentos.
 
@@ -147,9 +153,23 @@ La notación postfija para una expresión *E* puede definirse de manera inductiv
 
 1. Si *E* es una variable o constante, entonces la notación postfija para *E* es la misma *E*.
 
-1. Si *E* es una expresión de la forma *E~1~* **op** *E~2~*, entonces la notación postfija para *E* es *E'~1~* *E'~2~* **op**, en donde *E'~1~* y *E'~2~* son las notaciones postfijas de *E~1~* *E~2~*.
+1. Si *E* es una expresión de la forma *E<sub>1</sub>* **op** *E<sub>2</sub>*, entonces la notación postfija para *E* es *E'<sub>1</sub>* *E'<sub>2</sub>* **op**, en donde *E'<sub>1</sub>* y *E'<sub>2</sub>* son las notaciones postfijas de *E<sub>1</sub>* *E<sub>2</sub>*.
 
-1. Si *E* es una expresión con paréntesis de la forma (*E~1~*), entonces la notación postfija para *E* es la misma que para *E~1~*.
+1. Si *E* es una expresión con paréntesis de la forma (*E<sub>1</sub>*), entonces la notación postfija para *E* es la misma que para *E<sub>1</sub>*.
+
+**Ejemplo 1**
+
+La notación postfija para (9-5)+2 es 95-2+. Es decir, las traducciones de 9, 5 y 2 son las mismas constantes, en base a la regla (1). Entonces para *E<sub>1</sub>* + *E<sub>2</sub>*, en donde *E<sub>1</sub>* = (9-5) y *E<sub>2</sub>* = 2, en base a la regla (2) se obtiene (9-5)2+ y con la misma regla resolviendo el paréntesis se obtiene (95-)2+. Finalmente al aplicar la regla (3) se obtiene el resultado 95-2+.
+
+En otro caso como el de 9-(5+2), de forma similar considerando *E<sub>1</sub>* = 9 menos *E<sub>2</sub>* = (5+2). Al aplicar la regla (2) al paréntesis se obtiene 9-(52+) y mediante la misma regla se resuelve a 9(52+)-. Finalmente mediante la regla (3) el resultado es 952+-.
+
+**Ejemplo 2**
+
+Analizando 952+-3* si partimos explorando desde la izquierda encontramos primero el operador `+`, tomando sus operandos anteriores 5 y 2 podemos realizar la suma obteniendo 97-3*. El siguiente operador es el `-` y al tomar los dos operandos anteriores 9-7 resultan en 23*. Finalmente, se realiza la multiplicación y el resultado es 6.
+
+<br/>
+
+La notación postfija, como se observó en los ejemplos, no requiere de paréntesis y se explora desde izquierda a derecha para encontrar operadores de los cuales posteriormente se deducen los operandos, mismos con los cuales se ejecuta la operación y se la reemplaza por el resultado. 
 
 ## Pasos para la Construcción
 
